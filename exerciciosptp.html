@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Portal de Exercícios PTP I - HTML, CSS e JavaScript</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --bg: #050816;
+      --bg-elevated: #0b1020;
+      --accent: #4f46e5;
+      --accent-soft: rgba(79, 70, 229, 0.16);
+      --accent-strong: #22c55e;
+      --border-subtle: rgba(148, 163, 184, 0.4);
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --danger: #ef4444;
+      --danger-soft: rgba(248, 113, 113, 0.16);
+      --radius-lg: 16px;
+      --radius-md: 10px;
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.65);
+      --shadow-subtle: 0 10px 30px rgba(15, 23, 42, 0.6);
+    }
+
+    body[data-theme="light"] {
+      --bg: #e5edf7;
+      --bg-elevated: #ffffff;
+      --accent: #2563eb;
+      --accent-soft: rgba(37, 99, 235, 0.16);
+      --accent-strong: #16a34a;
+      --border-subtle: rgba(148, 163, 184, 0.7);
+      --text-main: #0f172a;
+      --text-muted: #4b5563;
+      --danger: #b91c1c;
+      --danger-soft: rgba(248, 113, 113, 0.16);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 17px;
+      background: var(--bg);
+      color: var(--text-main);
+    }
+
+    body {
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 1200px;
+      background: var(--bg-elevated);
+      border-radius: 24px;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+      backdrop-filter: blur(10px);
+      background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.18), transparent 55%),
+                  radial-gradient(circle at top right, rgba(168, 85, 247, 0.18), transparent 55%),
+                  rgba(15, 23, 42, 0.92);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      background:
+        conic-gradient(from 210deg, #22c55e, #22d3ee, #8b5cf6, #22c55e);
+      padding: 2px;
+      box-shadow: 0 0 22px rgba(34, 197, 94, 0.55);
+    }
+
+    .brand-mark::after {
+      content: "PT";
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      background: radial-gradient(circle at top, #0f172a 0, #020617 55%);
+      font-size: 0.8rem;
+      color: #e5e7eb;
+      font-weight: 700;
+    }
+
+    .brand-text h1 {
+      margin: 0;
+      font-size: 1.4rem;
+      letter-spacing: 0.04em;
+    }
+
+    .brand-text p {
+      margin: 2px 0 0;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .theme-toggle {
+      font-size: 0.8rem;
+      padding-inline: 10px;
+    }
+
+    .theme-toggle-icon {
+      font-size: 0.9rem;
+    }
+
+    .student-info-display {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: 8px 12px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      background: radial-gradient(circle at top left, rgba(34, 197, 94, 0.2), transparent 52%),
+                  rgba(15, 23, 42, 0.96);
+      font-size: 0.78rem;
+    }
+
+    .student-info-display span {
+      white-space: nowrap;
+    }
+
+    .timer {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+    }
+
+    .timer-label {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .timer-value {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 1.25rem;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: radial-gradient(circle at top, rgba(34, 197, 94, 0.12), rgba(15, 23, 42, 0.96));
+      border: 1px solid rgba(34, 197, 94, 0.55);
+      color: #bbf7d0;
+      min-width: 92px;
+      text-align: center;
+      box-shadow: 0 0 16px rgba(34, 197, 94, 0.55);
+    }
+
+    .timer--warning .timer-value {
+      border-color: #f97316;
+      color: #fed7aa;
+      background: radial-gradient(circle at top, rgba(249, 115, 22, 0.16), rgba(15, 23, 42, 0.95));
+      box-shadow: 0 0 18px rgba(249, 115, 22, 0.7);
+    }
+
+    .timer--danger .timer-value {
+      border-color: var(--danger);
+      color: #fecaca;
+      background: radial-gradient(circle at top, rgba(239, 68, 68, 0.18), rgba(15, 23, 42, 0.95));
+      box-shadow: 0 0 18px rgba(239, 68, 68, 0.85);
+    }
+
+    .app-main {
+      padding: 18px 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      overflow-y: auto;
+      max-height: calc(100vh - 80px);
+    }
+
+    .panel {
+      background: radial-gradient(circle at top left, rgba(31, 41, 55, 0.9), rgba(15, 23, 42, 0.98));
+      border-radius: var(--radius-lg);
+      padding: 18px 18px 16px;
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-subtle);
+    }
+
+    .panel h2 {
+      margin: 0 0 6px;
+      font-size: 1.2rem;
+    }
+
+    .panel-description {
+      margin: 0 0 14px;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px 16px;
+      align-items: flex-end;
+    }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .form-field label {
+      font-size: 0.95rem;
+      color: #cbd5f5;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.65);
+      background: rgba(15, 23, 42, 0.95);
+      padding: 9px 13px;
+      color: var(--text-main);
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, transform 0.06s ease;
+    }
+
+    input[type="text"]:focus,
+    input[type="password"]:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(79, 70, 229, 0.45), 0 0 18px rgba(79, 70, 229, 0.45);
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.9), rgba(2, 6, 23, 0.98));
+      transform: translateY(-0.5px);
+    }
+
+    .form-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: 1px solid transparent;
+      padding: 9px 18px;
+      font-size: 0.98rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform 0.08s ease, box-shadow 0.12s ease, background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #4f46e5, #22c55e);
+      color: #f9fafb;
+      box-shadow: 0 14px 25px rgba(79, 70, 229, 0.5);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 35px rgba(79, 70, 229, 0.7);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+      box-shadow: 0 8px 15px rgba(79, 70, 229, 0.6);
+    }
+
+    .btn-secondary {
+      background: rgba(15, 23, 42, 0.96);
+      border-color: rgba(148, 163, 184, 0.65);
+      color: var(--text-main);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(30, 64, 175, 0.55);
+      border-color: rgba(191, 219, 254, 0.9);
+      box-shadow: 0 10px 20px rgba(15, 23, 42, 0.85);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary:active {
+      transform: translateY(0);
+    }
+
+    .info-small {
+      margin: 8px 0 0;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .panel-exercicios.disabled {
+      opacity: 0.4;
+      pointer-events: none;
+      filter: grayscale(0.15);
+    }
+
+    .tabs {
+      display: inline-flex;
+      padding: 4px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.98);
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      margin-bottom: 12px;
+    }
+
+    .tab {
+      border-radius: 999px;
+      border: none;
+      padding: 7px 20px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      background: transparent;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background 0.14s ease, color 0.14s ease, transform 0.08s ease, box-shadow 0.12s ease;
+    }
+
+    .tab.active {
+      background: radial-gradient(circle at top, rgba(34, 197, 94, 0.22), rgba(79, 70, 229, 0.6));
+      color: #f9fafb;
+      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.7);
+      transform: translateY(-0.5px);
+    }
+
+    .tabs-content {
+      border-radius: 18px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 0.98));
+      padding: 14px 14px 10px;
+      box-shadow: 0 14px 30px rgba(15, 23, 42, 0.85);
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    .exercise {
+      padding: 10px 12px 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      background:
+        radial-gradient(circle at top left, rgba(56, 189, 248, 0.08), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(129, 140, 248, 0.08), transparent 55%),
+        rgba(15, 23, 42, 0.98);
+      margin-bottom: 10px;
+    }
+
+    .exercise h3 {
+      margin: 0 0 6px;
+      font-size: 1.05rem;
+    }
+
+    .exercise p {
+      margin: 2px 0;
+      font-size: 0.95rem;
+      color: #d1d5db;
+    }
+
+    .exercise code {
+      background: rgba(15, 23, 42, 0.95);
+      padding: 2px 5px;
+      border-radius: 6px;
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      font-size: 0.85rem;
+    }
+
+    .code-snippet {
+      background: rgba(15, 23, 42, 0.98);
+      border-radius: 10px;
+      padding: 8px 10px;
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      font-size: 0.9rem;
+      overflow-x: auto;
+    }
+
+    textarea {
+      width: 100%;
+      margin-top: 8px;
+      min-height: 90px;
+      resize: vertical;
+      border-radius: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      background: rgba(15, 23, 42, 0.98);
+      padding: 8px 10px;
+      color: var(--text-main);
+      font-size: 0.95rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      outline: none;
+      transition: border-color 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+    }
+
+    textarea:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.5), 0 0 18px rgba(56, 189, 248, 0.5);
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.95), rgba(2, 6, 23, 0.99));
+    }
+
+    .submit-area {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .panel-docente {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .teacher-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) auto;
+      gap: 10px 16px;
+      align-items: center;
+    }
+
+    .panel-correcoes {
+      background:
+        radial-gradient(circle at top left, rgba(16, 185, 129, 0.2), transparent 60%),
+        rgba(15, 23, 42, 0.98);
+    }
+
+    .answers-summary {
+      border-radius: 14px;
+      border: 1px dashed rgba(148, 163, 184, 0.7);
+      padding: 10px 12px;
+      background: rgba(15, 23, 42, 0.98);
+      max-height: 240px;
+      overflow-y: auto;
+      font-size: 0.82rem;
+    }
+
+    .answers-summary-item {
+      margin-bottom: 6px;
+    }
+
+    .answers-summary-item b {
+      color: #e5e7eb;
+    }
+
+    .corrections-details {
+      margin-top: 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      padding: 8px 10px;
+      background: rgba(15, 23, 42, 0.98);
+    }
+
+    .corrections-details summary {
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .corrections-details ul {
+      padding-left: 18px;
+      margin: 6px 0 0;
+    }
+
+    .corrections-details li {
+      font-size: 0.82rem;
+      margin-bottom: 4px;
+      color: #d1d5db;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 18px;
+      right: 18px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      color: #e5e7eb;
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.9), rgba(59, 130, 246, 0.9));
+      box-shadow: 0 14px 30px rgba(15, 23, 42, 0.85);
+      opacity: 0;
+      transform: translateY(8px);
+      pointer-events: none;
+      transition: opacity 0.16s ease, transform 0.16s ease;
+      z-index: 40;
+    }
+
+    .toast--error {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.9), rgba(248, 113, 113, 0.9));
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 900px) {
+      .app-main {
+        max-height: none;
+      }
+
+      .form-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .teacher-grid {
+        grid-template-columns: minmax(0, 1fr);
+        align-items: stretch;
+      }
+
+      .app-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .header-right {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .student-info-display {
+        flex: 1;
+      }
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 12px 8px;
+      }
+
+      .app-container {
+        border-radius: 18px;
+      }
+
+      .tabs-content {
+        padding: 10px 8px 8px;
+      }
+
+      .exercise {
+        padding: 8px 8px 8px;
+      }
+    }
+  </style>
+</head>
+<body data-theme="dark">
+  <div class="app-container">
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-mark">PTP I</div>
+        <div class="brand-text">
+          <h1>Portal de Exercícios</h1>
+          <p>Desenvolvimento de Soluções Web e Mobile</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="student-info-display" id="studentInfoDisplay">
+          <span id="displayName">Nome: —</span>
+          <span id="displayNumber">N.º: —</span>
+        </div>
+        <div class="timer" id="timer">
+          <span class="timer-label">Tempo restante</span>
+          <span class="timer-value" id="timerValue">40:00</span>
+        </div>
+      </div>
+      <button type="button" class="theme-toggle btn btn-secondary" id="themeToggleBtn">
+        <span class="theme-toggle-icon" id="themeIcon">🌙</span>
+        <span class="theme-toggle-label" id="themeLabel">Modo escuro</span>
+      </button>
+    </header>
+
+    <main class="app-main">
+      <section class="panel panel-identificacao">
+        <h2>Identificação do Estudante</h2>
+        <p class="panel-description">
+          Preencha os seus dados e clique em <strong>Iniciar teste</strong> para começar. O temporizador de 40 minutos será iniciado
+          e poderá navegar livremente entre as abas de HTML, CSS e JavaScript.
+        </p>
+        <form id="studentForm" class="form-grid">
+          <div class="form-field">
+            <label for="studentName">Nome completo</label>
+            <input type="text" id="studentName" required placeholder="Ex.: Armando Correia">
+          </div>
+          <div class="form-field">
+            <label for="studentNumber">Número de estudante</label>
+            <input type="text" id="studentNumber" required placeholder="Ex.: 20260001">
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="startBtn">Iniciar teste</button>
+          </div>
+        </form>
+        <p class="info-small" id="startInfo">
+          Após iniciar, o tempo não pode ser pausado. Utilize as abas abaixo para responder a todos os exercícios e no final clique em
+          <strong>Submeter respostas</strong>.
+        </p>
+      </section>
+
+      <section class="panel panel-exercicios disabled" id="exercisePanel">
+        <div class="tabs">
+          <button class="tab active" data-tab="html">HTML</button>
+          <button class="tab" data-tab="css">CSS</button>
+          <button class="tab" data-tab="js">JavaScript</button>
+        </div>
+
+        <div class="tabs-content">
+          <!-- HTML TAB -->
+          <section class="tab-panel active" data-tab-panel="html">
+            <h2>Exercícios de HTML</h2>
+            <p class="panel-description">
+              Os exercícios abaixo focam a estrutura básica de páginas web, elementos de texto, listas, hiperligações, imagens e formulários.
+            </p>
+
+            <article class="exercise">
+              <h3>HTML 1 – Conceitos básicos (teórico)</h3>
+              <p><strong>a)</strong> Explique, com as suas palavras, a diferença entre as tags <code>&lt;head&gt;</code> e <code>&lt;body&gt;</code>.</p>
+              <p><strong>b)</strong> Indique a finalidade da tag <code>&lt;!DOCTYPE html&gt;</code> num documento HTML5.</p>
+              <textarea data-question-id="html1" placeholder="Escreva a sua resposta aqui..."></textarea>
+            </article>
+
+            <article class="exercise">
+              <h3>HTML 2 – Estrutura mínima (prático)</h3>
+              <p>
+                Escreva o código HTML mínimo (HTML5) de uma página cujo título é
+                <strong>Portal PTP I</strong> e cujo corpo apresenta apenas um cabeçalho de nível 1 com o texto
+                "Bem-vindo ao Portal de Exercícios".
+              </p>
+              <textarea data-question-id="html2" placeholder="Escreva o código HTML..."></textarea>
+            </article>
+
+            <article class="exercise">
+              <h3>HTML 3 – Listas e links (misto)</h3>
+              <p>
+                Considere que pretende criar um menu simples com 3 ligações: "Início", "Sobre" e "Contacto".
+              </p>
+              <p><strong>a)</strong> Que tipo de lista é mais apropriada para um menu de navegação? Justifique.</p>
+              <p><strong>b)</strong> Escreva o código HTML para esse menu, assumindo que as páginas são
+                <code>index.html</code>, <code>sobre.html</code> e <code>contacto.html</code>.</p>
+              <textarea data-question-id="html3" placeholder="Resposta teórica e código..."></textarea>
+            </article>
+
+            <article class="exercise">
+              <h3>HTML 4 – Imagens e atributos (prático)</h3>
+              <p>
+                Escreva o código HTML para inserir uma imagem chamada <code>logo.png</code>, com texto alternativo
+                "Logótipo da disciplina" e largura de 200px.
+              </p>
+              <textarea data-question-id="html4" placeholder="Escreva o código HTML..."></textarea>
+            </article>
+
+            <article class="exercise">
+              <h3>HTML 5 – Formulário simples (misto)</h3>
+              <p>
+                Crie o código de um formulário HTML com os campos "Nome", "Email" e um botão "Enviar". Todos os campos devem ser obrigatórios.
+              </p>
+              <textarea data-question-id="html5" placeholder="Escreva o código do formulário..."></textarea>
+            </article>
+          </section>
+
+          <!-- CSS TAB -->
+          <section class="tab-panel" data-tab-panel="css">
+            <h2>Exercícios de CSS</h2>
+            <p class="panel-description">
+              Estes exercícios abordam seletores, cores, caixa (box-model) e layout básico com flexbox.
+            </p>
+
+            <article class="exercise">
+              <h3>CSS 1 – Conceitos básicos (teórico)</h3>
+              <p><strong>a)</strong> Explique a diferença entre CSS inline, interno (no <code>&lt;style&gt;</code>) e externo (ficheiro <code>.css</code>).</p>
+              <p><strong>b)</strong> Indique duas vantagens em utilizar um ficheiro CSS externo.</p>
+              <textarea data-question-id="css1" placeholder="Escreva a sua resposta aqui..."></textarea>
+            </article>
+
+            <article class="exercise">
+              <h3>CSS 2 – Seletores (misto)</h3>
+              <p>
+                Considere o seguinte excerto de HTML:
+              </p>
+              <pre class="code-snippet">
+&lt;h1 id="titulo-principal"&gt;Portal PTP I&lt;/h1&gt;
+&lt;p class="destaque"&gt;Bem-vindo!&lt;/p&gt;
+&lt;p&gt;Responda a todos os exercícios.&lt;/p&gt;
+              </pre>
+              <p><strong>a)</strong> Escreva um seletor CSS para mudar a cor do texto do título para azul escuro.</p>
+              <p><strong>b)</strong> Escreva um seletor CSS para aplicar negrito apenas ao parágrafo com classe <code>destaque</code>.</p>
+              <textarea data-question-id="css2" placeholder="Escreva os seletores e declarações CSS..."></textarea>
+            </article>
+
+            <article class="exercise">
+              <h3>CSS 3 – Box model (teórico/prático)</h3>
+              <p><strong>a)</strong> Descreva os quatro componentes principais do box model em CSS.</p>
+              <p><strong>b)</strong> Escreva regras CSS para uma caixa com largura de 300px, preenchimento (padding) de 16px,
+                margem de 24px e uma borda sólida de 2px em cinzento.</p>
+              <textarea data-question-id="css3" placeholder="Explique e escreva o CSS..."></textarea>
+            </article>
+
+            <article class="exercise">
+              <h3>CSS 4 – Cores e fontes (prático)</h3>
+              <p>
+                Defina uma regra CSS para o corpo da página com fonte padrão "Segoe UI" ou, em alternativa, "Arial",
+                tamanho de 16px, cor de texto #222 e cor de fundo #f5f7fb.
+              </p>
+              <textarea data-question-id="css4" placeholder="Escreva a regra CSS..."></textarea>
+            </article>
+
+            <article class="exercise">
+              <h3>CSS 5 – Layout com flexbox (misto)</h3>
+              <p>
+                Pretende criar uma barra de navegação horizontal com os links distribuídos na mesma linha.
+              </p>
+              <p><strong>a)</strong> Que propriedade CSS ativa o modelo de layout flexível num elemento?</p>
+              <p><strong>b)</strong> Escreva regras CSS para um elemento <code>.nav</code> que alinhe os itens horizontalmente
+                e distribua espaço entre eles.</p>
+              <textarea data-question-id="css5" placeholder="Explique e escreva o CSS..."></textarea>
+            </article>
+          </section>
+
+          <!-- JS TAB -->
+          <section class="tab-panel" data-tab-panel="js">
+            <h2>Exercícios de JavaScript</h2>
+            <p class="panel-description">
+              Os exercícios a seguir abordam variáveis, tipos, estruturas de controlo, funções e manipulação simples do DOM.
+            </p>
+
+            <article class="exercise">
+              <h3>JS 1 – Variáveis e tipos (teórico)</h3>
+              <p><strong>a)</strong> Explique a diferença entre <code>let</code>, <code>const</code> e <code>var</code> em JavaScript moderno.</p>
+              <p><strong>b)</strong> Dê um exemplo de declaração com cada um.</p>
+              <textarea data-question-id="js1" placeholder="Explique e dê exemplos..."></textarea>
+            </article>
+
+            <article class="exercise">
+              <h3>JS 2 – Condições (prático)</h3>
+              <p>
+                Escreva uma função JavaScript chamada <code>classificarNota</code> que receba uma nota (0–20) e devolva:
+                "Reprovado" se a nota for &lt; 10, "Suficiente" entre 10 e 13, "Bom" entre 14 e 17 e "Excelente" entre 18 e 20.
+              </p>
+              <textarea data-question-id="js2" placeholder="Escreva a função em JavaScript..."></textarea>
+            </article>
+
+            <article class="exercise">
+              <h3>JS 3 – Ciclos (prático)</h3>
+              <p>
+                Escreva código JavaScript que imprima no console todos os números pares de 0 a 20 (inclusive).
+              </p>
+              <textarea data-question-id="js3" placeholder="Escreva o código do ciclo..."></textarea>
+            </article>
+
+            <article class="exercise">
+              <h3>JS 4 – Funções e arrays (misto)</h3>
+              <p>
+                Crie uma função chamada <code>media</code> que receba um array de números e devolva a média aritmética desses valores.
+                Explique, em comentário ou texto, o algoritmo utilizado.
+              </p>
+              <textarea data-question-id="js4" placeholder="Função e explicação..."></textarea>
+            </article>
+
+            <article class="exercise">
+              <h3>JS 5 – DOM básico (misto)</h3>
+              <p>
+                Escreva o código JavaScript necessário para, ao clicar num botão com id <code>btn-saudacao</code>,
+                ler o valor de um <code>input</code> com id <code>txt-nome</code> e mostrar uma mensagem de saudação
+                dentro de uma <code>div</code> com id <code>resultado</code>.
+              </p>
+              <textarea data-question-id="js5" placeholder="Manipulação de DOM em JavaScript..."></textarea>
+            </article>
+          </section>
+        </div>
+
+        <div class="submit-area">
+          <button class="btn btn-secondary" id="saveLocalBtn" type="button">Guardar rascunho no navegador</button>
+          <button class="btn btn-primary" id="submitBtn" type="button">Submeter respostas</button>
+          <p class="info-small">
+            As respostas são guardadas apenas neste navegador (para demonstração). Após submeter, as caixas de resposta serão bloqueadas.
+          </p>
+        </div>
+      </section>
+
+      <section class="panel panel-docente">
+        <h2>Área do Docente</h2>
+        <p class="panel-description">
+          Introduza a senha privada para desbloquear a visualização das correções e a grelha de respostas inseridas
+          pelo estudante. Esta funcionalidade é apenas demonstrativa (funciona no lado do cliente).
+        </p>
+        <div class="teacher-grid">
+          <div class="form-field">
+            <label for="teacherPassword">Senha do docente</label>
+            <input type="password" id="teacherPassword" placeholder="Introduza a senha...">
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary" id="unlockBtn" type="button">Desbloquear correções</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel panel-correcoes hidden" id="correctionsPanel">
+        <h2>Correções e Grelha de Respostas</h2>
+        <p class="panel-description" id="studentResultInfo">
+          Resultado do estudante: ainda não submetido.
+        </p>
+        <p class="panel-description">
+          Abaixo são apresentadas as respostas introduzidas pelo estudante e um gabarito/sugestão de solução para
+          cada exercício. Esta secção só fica visível após a introdução correta da senha.
+        </p>
+
+        <div id="studentAnswersSummary" class="answers-summary">
+          <!-- preenchido dinamicamente -->
+        </div>
+
+        <details class="corrections-details" open>
+          <summary>Gabarito – HTML</summary>
+          <ul>
+            <li><strong>HTML 1</strong>: 
+              <em>&lt;head&gt;</em> é a secção onde colocamos informação sobre a página (como título no separador, ligações para ficheiros CSS/JS e metadados) e normalmente não aparece no ecrã. 
+              <em>&lt;body&gt;</em> é a parte visível: tudo o que o utilizador vê (textos, imagens, botões, formulários, etc.). 
+              A declaração <code>&lt;!DOCTYPE html&gt;</code> informa o navegador de que o documento segue o padrão HTML5, para que interprete o código de forma correta e consistente.
+            </li>
+            <li><strong>HTML 2</strong>: 
+              O documento mínimo em HTML5 deve ter: 
+              <code>&lt;!DOCTYPE html&gt;</code>, 
+              <code>&lt;html lang="pt"&gt;</code>, 
+              um <code>&lt;head&gt;</code> com pelo menos um <code>&lt;meta charset="UTF-8"&gt;</code> e o <code>&lt;title&gt;Portal PTP I&lt;/title&gt;</code>, 
+              e um <code>&lt;body&gt;</code> que contenha um único <code>&lt;h1&gt;Bem-vindo ao Portal de Exercícios&lt;/h1&gt;</code>.
+            </li>
+            <li><strong>HTML 3</strong>: 
+              Para menus de navegação, é comum usar uma lista não ordenada (<code>&lt;ul&gt;</code>) com itens <code>&lt;li&gt;</code>, porque representa um conjunto de opções sem ordem numérica. 
+              Dentro de cada <code>&lt;li&gt;</code> colocamos um link <code>&lt;a href="..."&gt;</code>, apontando para <code>index.html</code>, <code>sobre.html</code> e <code>contacto.html</code>.
+            </li>
+            <li><strong>HTML 4</strong>: 
+              A imagem deve ter o atributo <code>src</code> (ficheiro), <code>alt</code> (texto alternativo para acessibilidade) e o atributo de largura, por exemplo: 
+              <code>&lt;img src="logo.png" alt="Logótipo da disciplina" width="200"&gt;</code>.
+            </li>
+            <li><strong>HTML 5</strong>: 
+              O formulário deve ter a tag <code>&lt;form&gt;</code> a envolver os campos, inputs de texto para "Nome" e "Email" com o atributo <code>required</code> e um botão de submissão, por exemplo <code>&lt;button type="submit"&gt;Enviar&lt;/button&gt;</code>. 
+              É boa prática usar <code>&lt;label&gt;</code> associados a cada campo.
+            </li>
+          </ul>
+        </details>
+
+        <details class="corrections-details">
+          <summary>Gabarito – CSS</summary>
+          <ul>
+            <li><strong>CSS 1</strong>: 
+              CSS inline é escrito diretamente no elemento através do atributo <code>style</code>, o que dificulta a manutenção. 
+              CSS interno é colocado dentro de uma tag <code>&lt;style&gt;</code> no <code>&lt;head&gt;</code>. 
+              CSS externo fica num ficheiro separado (<code>.css</code>) ligado ao HTML com <code>&lt;link&gt;</code>. 
+              Usar ficheiros externos facilita a reutilização de estilos em várias páginas e permite que o browser faça cache, melhorando o desempenho.
+            </li>
+            <li><strong>CSS 2</strong>: 
+              Para o título: <code>#titulo-principal { color: #002b5c; }</code>. 
+              Para o parágrafo em destaque: <code>p.destaque { font-weight: bold; }</code>. 
+              Aqui usamos um seletor de id (<code>#</code>) e um seletor de classe (<code>.</code>).
+            </li>
+            <li><strong>CSS 3</strong>: 
+              O box-model é composto por: conteúdo (content), preenchimento interno (padding), borda (border) e margem externa (margin). 
+              Um exemplo de regra completa seria: <code>.caixa { width: 300px; padding: 16px; margin: 24px; border: 2px solid #ccc; }</code>, definindo a largura da área de conteúdo e os espaços à volta.
+            </li>
+            <li><strong>CSS 4</strong>: 
+              Podemos definir o estilo global da página com: 
+              <code>body { font-family: "Segoe UI", Arial, sans-serif; font-size: 16px; color: #222; background: #f5f7fb; }</code>. 
+              Assim garantimos tipografia consistente e bom contraste entre texto e fundo.
+            </li>
+            <li><strong>CSS 5</strong>: 
+              Para ativar o flexbox, usamos <code>display: flex;</code> no elemento pai. 
+              Para uma barra de navegação com itens na mesma linha e espaço entre eles, por exemplo: 
+              <code>.nav { display: flex; justify-content: space-between; align-items: center; }</code>.
+            </li>
+          </ul>
+        </details>
+
+        <details class="corrections-details">
+          <summary>Gabarito – JavaScript</summary>
+          <ul>
+            <li><strong>JS 1</strong>: 
+              <code>let</code> e <code>const</code> têm escopo de bloco (respeitam chaves <code>{}</code>), enquanto <code>var</code> tem escopo de função ou global. 
+              <code>const</code> não permite reatribuição do valor (a referência não muda). 
+              Exemplos: <code>let idade = 20;</code>, <code>const PI = 3.14;</code>, <code>var nome = "Ana";</code>.
+            </li>
+            <li><strong>JS 2</strong>: 
+              A função <code>classificarNota</code> deve receber um número e usar instruções <code>if / else if / else</code> para testar os intervalos. 
+              Por exemplo, se a nota for menor que 10, devolve "Reprovado"; se estiver entre 10 e 13, "Suficiente"; 14 a 17, "Bom"; 18 a 20, "Excelente".
+            </li>
+            <li><strong>JS 3</strong>: 
+              Podemos usar um ciclo <code>for</code> de 0 até 20, verificando se o número é par com <code>i % 2 === 0</code> e, em caso afirmativo, escrever no console com <code>console.log(i)</code>. 
+              Alternativamente, podemos incrementar de 2 em 2: <code>for (let i = 0; i <= 20; i += 2) {...}</code>.
+            </li>
+            <li><strong>JS 4</strong>: 
+              A função <code>media</code> deve somar todos os elementos do array (por exemplo com um ciclo ou <code>reduce</code>) e depois dividir pelo número de elementos (<code>array.length</code>). 
+              É importante verificar o caso de array vazio, devolvendo 0 ou outra indicação apropriada para evitar divisão por zero.
+            </li>
+            <li><strong>JS 5</strong>: 
+              O código deve obter as referências aos elementos com <code>document.getElementById</code>, registar um <code>addEventListener("click", ...)</code> no botão e, dentro da função, ler <code>txt-nome.value</code>. 
+              Em seguida, deve construir uma mensagem de saudação (por exemplo, "Olá, Ana!") e atribuí-la à propriedade <code>textContent</code> da <code>div</code> com id <code>resultado</code>.
+            </li>
+          </ul>
+        </details>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const TEST_DURATION_SECONDS = 40 * 60; // 40 minutos
+    const TEACHER_PASSWORD = "docenteptp2026";
+
+    let remainingSeconds = TEST_DURATION_SECONDS;
+    let timerInterval = null;
+    let testStarted = false;
+    let submitted = false;
+    let studentResult = null;
+
+    function $(selector) {
+      return document.querySelector(selector);
+    }
+
+    function $all(selector) {
+      return Array.from(document.querySelectorAll(selector));
+    }
+
+    function formatTime(seconds) {
+      const m = Math.floor(seconds / 60)
+        .toString()
+        .padStart(2, "0");
+      const s = (seconds % 60).toString().padStart(2, "0");
+      return `${m}:${s}`;
+    }
+
+    function showToast(message, isError = false) {
+      let toast = document.querySelector(".toast");
+      if (!toast) {
+        toast = document.createElement("div");
+        toast.className = "toast";
+        document.body.appendChild(toast);
+      }
+      toast.textContent = message;
+      toast.classList.toggle("toast--error", isError);
+      toast.classList.add("show");
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2600);
+    }
+
+    function downloadTextFile(filename, content) {
+      const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function updateTimerVisual() {
+      const timerValue = $("#timerValue");
+      const timerContainer = $("#timer");
+
+      if (!timerValue || !timerContainer) return;
+
+      timerValue.textContent = formatTime(remainingSeconds);
+
+      const fraction = remainingSeconds / TEST_DURATION_SECONDS;
+      timerContainer.classList.remove("timer--warning", "timer--danger");
+
+      if (fraction <= 0.2) {
+        timerContainer.classList.add("timer--danger");
+      } else if (fraction <= 0.5) {
+        timerContainer.classList.add("timer--warning");
+      }
+    }
+
+    function startTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+      }
+      remainingSeconds = TEST_DURATION_SECONDS;
+      updateTimerVisual();
+
+      timerInterval = setInterval(() => {
+        remainingSeconds -= 1;
+        if (remainingSeconds <= 0) {
+          remainingSeconds = 0;
+          updateTimerVisual();
+          clearInterval(timerInterval);
+          timerInterval = null;
+          autoSubmitOnTimeout();
+        } else {
+          updateTimerVisual();
+        }
+      }, 1000);
+    }
+
+    function autoSubmitOnTimeout() {
+      if (submitted) return;
+      submitted = true;
+      lockAnswers();
+      showToast("Tempo esgotado. Respostas submetidas automaticamente.");
+    }
+
+    function getAllAnswers() {
+      const answers = {};
+      const textareas = $all("textarea[data-question-id]");
+      textareas.forEach((ta) => {
+        const id = ta.dataset.questionId;
+        answers[id] = ta.value.trim();
+      });
+      return answers;
+    }
+
+    function fillAnswersFromObject(answers) {
+      if (!answers) return;
+      const textareas = $all("textarea[data-question-id]");
+      textareas.forEach((ta) => {
+        const id = ta.dataset.questionId;
+        if (Object.prototype.hasOwnProperty.call(answers, id)) {
+          ta.value = answers[id];
+        }
+      });
+    }
+
+    function lockAnswers() {
+      const textareas = $all("textarea[data-question-id]");
+      textareas.forEach((ta) => {
+        ta.setAttribute("disabled", "true");
+      });
+    }
+
+    function unlockAnswers() {
+      if (submitted) return;
+      const textareas = $all("textarea[data-question-id]");
+      textareas.forEach((ta) => {
+        ta.removeAttribute("disabled");
+      });
+    }
+
+    function buildStudentSummary(answers, student) {
+      const container = $("#studentAnswersSummary");
+      if (!container) return;
+
+      container.innerHTML = "";
+
+      const header = document.createElement("div");
+      header.className = "answers-summary-item";
+      header.innerHTML = `<b>Estudante:</b> ${student.name || "—"} (N.º ${student.number || "—"})`;
+      container.appendChild(header);
+
+      Object.entries(answers).forEach(([id, value]) => {
+        const item = document.createElement("div");
+        item.className = "answers-summary-item";
+        const label = id.toUpperCase();
+        const preview =
+          value.length > 120 ? `${value.slice(0, 120).replace(/\n/g, " ")}...` : value.replace(/\n/g, " ");
+        item.innerHTML = `<b>${label}</b>: <span>${preview || "<sem resposta>"} </span>`;
+        container.appendChild(item);
+      });
+    }
+
+    function buildStudentResult(answers, student) {
+      const totalQuestions = Object.keys(answers).length;
+      const answeredCount = Object.values(answers).filter((v) => v && v.trim().length > 0).length;
+      const percent = totalQuestions > 0 ? Math.round((answeredCount / totalQuestions) * 100) : 0;
+
+      const info = {
+        name: student.name || "—",
+        number: student.number || "—",
+        totalQuestions,
+        answeredCount,
+        percent,
+        timestamp: new Date().toISOString(),
+      };
+
+      studentResult = info;
+      const resultInfo = document.getElementById("studentResultInfo");
+      if (resultInfo) {
+        resultInfo.textContent = `Resultado do estudante: ${info.answeredCount} de ${info.totalQuestions} exercícios com resposta (${info.percent}%).`;
+      }
+
+      return info;
+    }
+
+    function generateResultsFile(answers, student, resultInfo) {
+      const lines = [];
+      lines.push("Portal de Exercícios PTP I - Resultado do Estudante");
+      lines.push(`Data/hora (ISO):;${resultInfo.timestamp}`);
+      lines.push(`Nome:;${student.name}`);
+      lines.push(`Número:;${student.number}`);
+      lines.push(`Total de exercícios:;${resultInfo.totalQuestions}`);
+      lines.push(`Exercícios respondidos:;${resultInfo.answeredCount}`);
+      lines.push(`Percentagem respondida:;${resultInfo.percent}%`);
+      lines.push("");
+      lines.push("ID da questão;Resposta (texto completo, que pode conter quebras de linha)");
+
+      Object.entries(answers).forEach(([id, value]) => {
+        const sanitized = (value || "").replace(/\r?\n/g, " \\n ");
+        lines.push(`${id};${sanitized}`);
+      });
+
+      const content = lines.join("\n");
+      const safeName = (student.name || "sem_nome").replace(/[^\w\-]+/g, "_");
+      const safeNumber = (student.number || "sem_numero").replace(/[^\w\-]+/g, "_");
+      const filename = `resultado_${safeName}_${safeNumber}.csv`;
+      downloadTextFile(filename, content);
+    }
+
+    const STORAGE_KEY = "portal_ptp_exercicios_v1";
+    const COMPLETED_KEY_PREFIX = "portal_ptp_exercicios_final_";
+
+    function saveDraft() {
+      const answers = getAllAnswers();
+      const student = getStudentInfo();
+      const payload = {
+        answers,
+        student,
+        timestamp: Date.now(),
+      };
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+        showToast("Rascunho guardado neste navegador.");
+      } catch (e) {
+        console.error("Erro ao guardar no localStorage", e);
+        showToast("Não foi possível guardar o rascunho.", true);
+      }
+    }
+
+    function loadDraftIfAny() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const payload = JSON.parse(raw);
+        fillAnswersFromObject(payload.answers);
+        if (payload.student) {
+          $("#studentName").value = payload.student.name || "";
+          $("#studentNumber").value = payload.student.number || "";
+        }
+        showToast("Rascunho anterior carregado (local).");
+      } catch (e) {
+        console.error("Erro ao ler localStorage", e);
+      }
+    }
+
+    function getStudentInfo() {
+      const name = $("#studentName")?.value.trim() ?? "";
+      const number = $("#studentNumber")?.value.trim() ?? "";
+      return { name, number };
+    }
+
+    function hasStudentCompleted(student) {
+      if (!student.name || !student.number) return false;
+      const key = `${COMPLETED_KEY_PREFIX}${student.name}__${student.number}`;
+      return localStorage.getItem(key) === "1";
+    }
+
+    function markStudentCompleted(student) {
+      if (!student.name || !student.number) return;
+      const key = `${COMPLETED_KEY_PREFIX}${student.name}__${student.number}`;
+      try {
+        localStorage.setItem(key, "1");
+      } catch (e) {
+        console.error("Erro ao marcar estudante como concluído", e);
+      }
+    }
+
+    function updateStudentHeaderDisplay(student) {
+      $("#displayName").textContent = `Nome: ${student.name || "—"}`;
+      $("#displayNumber").textContent = `N.º: ${student.number || "—"}`;
+    }
+
+    function handleStudentFormSubmit(e) {
+      e.preventDefault();
+      if (testStarted) {
+        showToast("O teste já foi iniciado.");
+        return;
+      }
+
+      const student = getStudentInfo();
+      if (!student.name || !student.number) {
+        showToast("Preencha o nome e o número de estudante.", true);
+        return;
+      }
+
+      if (hasStudentCompleted(student)) {
+        showToast("Este estudante já realizou o teste neste computador.", true);
+        return;
+      }
+
+      testStarted = true;
+      submitted = false;
+      remainingSeconds = TEST_DURATION_SECONDS;
+      updateStudentHeaderDisplay(student);
+      startTimer();
+
+      const panel = $("#exercisePanel");
+      panel.classList.remove("disabled");
+      unlockAnswers();
+
+      showToast("Teste iniciado. Boa sorte!");
+    }
+
+    function handleTabClick(e) {
+      const tab = e.currentTarget;
+      const name = tab.dataset.tab;
+      if (!name) return;
+
+      $all(".tab").forEach((t) => t.classList.toggle("active", t === tab));
+      $all(".tab-panel").forEach((p) => {
+        p.classList.toggle("active", p.dataset.tabPanel === name);
+      });
+    }
+
+    function handleSubmitClick() {
+      if (!testStarted) {
+        showToast("Inicie o teste antes de submeter.", true);
+        return;
+      }
+      if (submitted) {
+        showToast("As respostas já foram submetidas.");
+        return;
+      }
+
+      const answers = getAllAnswers();
+      const student = getStudentInfo();
+
+      submitted = true;
+      lockAnswers();
+      clearInterval(timerInterval);
+      timerInterval = null;
+
+      const resultInfo = buildStudentResult(answers, student);
+      markStudentCompleted(student);
+
+      showToast("Respostas submetidas. Aguarde a correção do docente.");
+
+      buildStudentSummary(answers, student);
+
+      generateResultsFile(answers, student, resultInfo);
+    }
+
+    function handleUnlockClick() {
+      const input = $("#teacherPassword");
+      const value = input.value;
+      if (!value) {
+        showToast("Introduza a senha do docente.", true);
+        return;
+      }
+      if (value !== TEACHER_PASSWORD) {
+        showToast("Senha incorreta.", true);
+        input.select();
+        return;
+      }
+      $("#correctionsPanel").classList.remove("hidden");
+      if (!submitted) {
+        const answers = getAllAnswers();
+        const student = getStudentInfo();
+        buildStudentSummary(answers, student);
+        buildStudentResult(answers, student);
+      }
+      showToast("Correções desbloqueadas.");
+    }
+
+    function initThemeToggle() {
+      const btn = document.getElementById("themeToggleBtn");
+      const icon = document.getElementById("themeIcon");
+      const label = document.getElementById("themeLabel");
+      if (!btn || !icon || !label) return;
+
+      const storedTheme = localStorage.getItem("portal_ptp_tema");
+      if (storedTheme === "light" || storedTheme === "dark") {
+        document.body.setAttribute("data-theme", storedTheme);
+      }
+
+      function refreshLabel() {
+        const current = document.body.getAttribute("data-theme") || "dark";
+        if (current === "light") {
+          icon.textContent = "☀️";
+          label.textContent = "Modo claro";
+        } else {
+          icon.textContent = "🌙";
+          label.textContent = "Modo escuro";
+        }
+      }
+
+      refreshLabel();
+
+      btn.addEventListener("click", () => {
+        const current = document.body.getAttribute("data-theme") || "dark";
+        const next = current === "dark" ? "light" : "dark";
+        document.body.setAttribute("data-theme", next);
+        localStorage.setItem("portal_ptp_tema", next);
+        refreshLabel();
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      remainingSeconds = TEST_DURATION_SECONDS;
+      updateTimerVisual();
+
+      loadDraftIfAny();
+
+      lockAnswers();
+
+      $("#studentForm")?.addEventListener("submit", handleStudentFormSubmit);
+      $all(".tab").forEach((tab) => tab.addEventListener("click", handleTabClick));
+      $("#submitBtn")?.addEventListener("click", handleSubmitClick);
+      $("#saveLocalBtn")?.addEventListener("click", saveDraft);
+      $("#unlockBtn")?.addEventListener("click", handleUnlockClick);
+
+      initThemeToggle();
+    });
+  </script>
+</body>
+</html>
+
